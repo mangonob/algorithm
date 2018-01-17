@@ -1,5 +1,8 @@
+from util import *
+
+
 class BinaryNode(object):
-    def __init__(self, key = None, left = None, right = None):
+    def __init__(self, key = None, left = NIL, right = NIL):
         self.key = key
         self.left = left
         self.right = right
@@ -22,7 +25,6 @@ class LinkedListNode(BinaryNode):
     def next(self, value):
         self.right = value
 
-
 class LinkedList(object):
     def __init__(self):
         self.length = 0
@@ -32,25 +34,19 @@ class LinkedList(object):
 
     @property
     def isEmpty(self):
-        return self.nil.next == None
+        return self.nil.next == NIL
+
+    def _validate_index(self, index, predicate = lambda x, y: x < y):
+        if not predicate(index, len(self)):
+            raise IndexError
 
     def append(self, key):
         """ Append a node that has the key to linked list. """
         self.insert(key, len(self))
 
-    def _validate_index(predicate = lambda x, y: x < y):
-        def decorator(func):
-            def wrapper(*args, **kwargs):
-                if not predicate(args[1], len(args[0])):
-                    raise IndexError
-                return func(*args, **kwargs)
-            return wrapper
-        return decorator
-
     def insert(self, key, position=0):
         """ Inset a node that has the key into specific position. """
-        if position > len(self) or position < 0:
-            raise  IndexError
+        self._validate_index(position, predicate=lambda x, y: 0 <= x <= y)
 
         curr = self.nil
 
@@ -70,9 +66,10 @@ class LinkedList(object):
     def __len__(self):
         return self.length
 
-    @_validate_index()
     def __setitem__(self, index, key):
         """ Set item for linked list, if key equal to length of linked list, a new node will be append. """
+        self._validate_index(index)
+
         curr = self.nil
 
         for i in range(0, index + 1):
@@ -80,9 +77,10 @@ class LinkedList(object):
 
         curr.key = key
 
-    @_validate_index()
     def __getitem__(self, index):
         """ Get an item by index. """
+        self._validate_index(index)
+
         curr = self.nil
 
         for i in range(0, index + 1):
@@ -90,9 +88,10 @@ class LinkedList(object):
 
         return curr.key
 
-    @_validate_index()
     def __delitem__(self, index):
         """ Remove an item by index. """
+        self._validate_index(index)
+
         curr = self.nil
 
         for i in range(0, index):
