@@ -8,14 +8,15 @@ from ch10_base_datastruct import *
 
 
 @time_profile()
-@time_profile()
-def main():
+def test(length):
     l = LinkedList()
 
-    for _ in range(0, 1000):
-        l.insert(1)
+    for _ in range(0, length):
+        l.insert(42)
 
-    print(len(l))
+def main():
+    for i in range(2, 7):
+        test(10 ** i)
 
 
 if __name__ == "__main__":
