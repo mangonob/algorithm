@@ -1,4 +1,4 @@
-from util import *
+from introduction_of_algorithms.util import *
 
 
 class BinaryNode(object):

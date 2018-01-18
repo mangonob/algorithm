@@ -1,22 +1,13 @@
 #!/usr/bin/env python
 
-import time
-import random
-import sys
-import os
-from ch10_base_datastruct import *
+from introduction_of_algorithms import *
 
-
-@time_profile()
-def test(length):
-    l = LinkedList()
-
-    for _ in range(0, length):
-        l.insert(42)
 
 def main():
-    for i in range(2, 7):
-        test(10 ** i)
+    hashed = [mul_hash(x, 100) for x in range(0, 10000)]
+    counts = [hashed.count(x) for x in range(0, 100)]
+    print(hashed)
+    print(counts)
 
 
 if __name__ == "__main__":
