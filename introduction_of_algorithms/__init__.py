@@ -6,4 +6,5 @@ Create by mangonob at 2018/1/18.
 from .ch06_heap_sort import *
 from .ch10_base_datastruct import *
 from .ch11_hash_table import *
+from .ch12_binary_search_tree import *
 

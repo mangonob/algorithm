@@ -4,10 +4,16 @@ from introduction_of_algorithms import *
 
 
 def main():
-    hashed = [mul_hash(x, 100) for x in range(0, 10000)]
-    counts = [hashed.count(x) for x in range(0, 100)]
-    print(hashed)
-    print(counts)
+    b = BinarySearchTree()
+    b.insert(2)
+    b.insert(1)
+    b.insert(7)
+    b.insert(8)
+    b.insert(5)
+    b.insert(3)
+    b.insert(6)
+    b.insert(4)
+    print(b)
 
 
 if __name__ == "__main__":

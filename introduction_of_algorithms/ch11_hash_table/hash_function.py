@@ -20,6 +20,7 @@ def create_universal_hash_function():
     b = randint(0, prime)
 
     def func(k, m):
+        print(k, a, b, prime, (a * k + b) % prime)
         if not k < prime: raise ValueError("Key '%s' greater or equal prime %s." % (k, m))
         return (a * k + b) % prime % m
 
