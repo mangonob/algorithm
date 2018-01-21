@@ -38,7 +38,12 @@ class BinarySearchTree(TernaryNode):
             elif k >= curr.key and not curr.right:
                 curr.right = new_node
                 new_node.parent = curr
+
                 break
+
+    def search(self, k):
+        """ Find the node containe key k. """
+        pass
 
     def remove(self, k):
         """ Remove a node contains key k from binary search tree. """
