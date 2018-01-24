@@ -1,5 +1,6 @@
 import time
 
+
 def time_profile(configures=None):
     """
     configures is a profile to control some behavior such as output.
@@ -31,11 +32,19 @@ def time_profile(configures=None):
 class SessionError(Exception):
     pass
 
+
 class _TimeProfileSession(object):
     shared_session_pool = list()
 
+    auto_increase_session_id = 0
+
     def __init__(self, description):
         self.description = description
+
+        if self.description == None:
+            self.description = "Session_%s" % _TimeProfileSession.auto_increase_session_id
+            _TimeProfileSession.auto_increase_session_id += 1
+
         self.start_time = time.time()
 
     @property
@@ -83,11 +92,11 @@ class _TimeProfileSession(object):
         print(self.description, "used", des)
         pass
 
-_auto_increase_session_id = 1
 
 def begin_time_profile(session_description = None):
-    _TimeProfileSession(description=session_description or "session_%s" % _auto_increase_session_id).begin()
+    _TimeProfileSession(description=session_description).begin()
     pass
+
 
 def commit_time_profile():
     session = _TimeProfileSession.shared_session_pool.pop()

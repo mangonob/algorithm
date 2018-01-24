@@ -12,13 +12,72 @@ class TreeNode(TernaryNode):
     pass
 
 
+class BinaryTreeNode(TreeNode):
+    """ TreeNode of BinaryTreeNode. """
+    @property
+    def min(self):
+        """ Return the most left node. """
+        node = self
+
+        while node.left:
+            node = node.left
+
+        return node
+
+    @property
+    def max(self):
+        """ Return the most right node. """
+        node = self
+
+        while node.right:
+            node = node.right
+
+        return node
+
+    @property
+    def next(self):
+        """ Return successor of a node. """
+        node = self
+
+        if node.right:
+            return self.right.min
+
+        parent = node.parent
+
+        while parent and node:
+            if parent.left == node:
+                return parent
+            node = parent
+            parent = parent.parent
+
+        return NIL
+
+    @property
+    def prev(self):
+        """ Return predecessor of a node. """
+        node = self
+
+        if node.left:
+            return self.left.max
+
+        parent = node.parent
+
+        while parent and node:
+            if parent.right == node:
+                return parent
+            node = parent
+            parent = parent.parent
+
+        return NIL
+
+
 class BinarySearchTree(TernaryNode):
     def __init__(self):
         self.root = NIL
 
     def insert(self, k):
         """ Insert a key into binary search tree. """
-        new_node = TreeNode(key=k)
+        new_node = BinaryTreeNode(key=k)
 
         if not self.root:
             self.root = new_node
@@ -43,11 +102,25 @@ class BinarySearchTree(TernaryNode):
 
     def search(self, k):
         """ Find the node containe key k. """
-        pass
+        if not self.root: return NIL
 
-    def remove(self, k):
-        """ Remove a node contains key k from binary search tree. """
-        pass
+        curr = self.root
+        while curr:
+            if k == curr.key:
+                return curr
+            elif k < curr.key:
+                curr = curr.left
+            else:
+                curr = curr.right
+        else:
+            return NIL
+
+    def pop(self, k):
+        """ Remove a node contains key k from binary search tree, if success return it. """
+        node = self.search(k)
+        if not node: return NIL
+
+        print(node.parent)
 
     def __str__(self):
         return "<" + ", ".join([str(x) for x in self])+ ">"
@@ -66,4 +139,3 @@ class BinarySearchTree(TernaryNode):
 
     def __iter__(self):
         for x in BinarySearchTree._iter_sub_tree(self.root): yield x
-

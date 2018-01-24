@@ -14,6 +14,17 @@ def create_linear_probing(capacity):
     return linear_probeing
 
 
+def create_double_probing(capacity):
+    """ Double proging function factory. """
+    base_hash_function = create_universal_hash_function(capacity)
+    base_hash_function2 = create_universal_hash_function(capacity - 1)
+
+    def double_probeing(k, a):
+        return (base_hash_function(k) + a * (1 + base_hash_function2(k))) % capacity
+
+    return double_probeing
+
+
 class OpenAddressingTable(object):
     def __init__(self, capacity, hash_function_factor=create_linear_probing):
         self.capacity = capacity
@@ -59,10 +70,11 @@ class OpenAddressingTable(object):
             return False
 
 
-t = OpenAddressingTable(100)
+t = OpenAddressingTable(49999, hash_function_factor=create_double_probing)
 
-for i in range(0, 100):
+for i in range(0, 49999):
     t.insert(i)
 
 print(t)
 
+l = list()
