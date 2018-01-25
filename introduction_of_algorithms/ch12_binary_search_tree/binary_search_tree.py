@@ -1,19 +1,46 @@
 from introduction_of_algorithms.ch10_base_datastruct import BinaryNode
 from introduction_of_algorithms.util.constant import *
 
+import weakref
+
+
 class TernaryNode(BinaryNode):
-    def __init__(self, key=None, left=NIL, right=NIL, parent=NIL):
-        super(TernaryNode, self).__init__(key=key, left=left, right=right)
-        self.parent = NIL
+    def __init__(self, parent=NIL, *args, **kwargs):
+        super(TernaryNode, self).__init__(*args, **kwargs)
+        self.weak_parent = NIL
+
+    @property
+    def parent(self):
+        return self.weak_parent and self.weak_parent()
+
+    @parent.setter
+    def parent(self, parent):
+        self.weak_parent = parent and weakref.ref(parent)
 
 
 class TreeNode(TernaryNode):
     """ General node of tree. """
-    pass
+
+    def pick(self):
+        if not self.parent: return
+
+        if self.parent.left == self:
+            self.parent.left = NIL
+        elif self.parent.right == self:
+            self.parent.right = NIL
+
+        self.parent = NIL
 
 
-class BinaryTreeNode(TreeNode):
-    """ TreeNode of BinaryTreeNode. """
+class BinarySearchTreeNode(TreeNode):
+    """ TreeNode of BinarySearchTreeNode. """
+
+    # def __del__(self):
+    #     print("DEL " + str(self))
+    #
+    def __str__(self):
+        return "<%s: (%s (%s)  %s)>" % (self.parent and self.parent.key or "/ ", self.left and self.left.key or "/ ", self.key, self.right and self.right.key or "/ ")
+
     @property
     def min(self):
         """ Return the most left node. """
@@ -72,15 +99,21 @@ class BinaryTreeNode(TreeNode):
 
 
 class BinarySearchTree(TernaryNode):
+    LEFT = 0
+    RIGHT = 1
+
     def __init__(self):
-        self.root = NIL
+        self.nil = BinarySearchTreeNode()
+        self._size = 0
 
     def insert(self, k):
         """ Insert a key into binary search tree. """
-        new_node = BinaryTreeNode(key=k)
+        new_node = BinarySearchTreeNode(key=k)
 
-        if not self.root:
-            self.root = new_node
+        if self.is_empty:
+            self.nil.left = new_node
+            new_node.parent = self.nil
+            self.size += 1
             return
 
         curr = self.root
@@ -97,12 +130,39 @@ class BinarySearchTree(TernaryNode):
             elif k >= curr.key and not curr.right:
                 curr.right = new_node
                 new_node.parent = curr
-
                 break
+
+        self.size += 1
+
+    @property
+    def root(self):
+        return self.nil.left
+
+    @property
+    def is_empty(self):
+        return not self.root
+
+    @property
+    def minimum(self):
+        if self.is_empty: return NIL
+        return self.root.min
+
+    @property
+    def maximum(self):
+        if self.is_empty: return NIL
+        return self.root.max
+
+    @property
+    def size(self):
+        return self._size
+
+    @size.setter
+    def size(self, size):
+        self._size = size
 
     def search(self, k):
         """ Find the node containe key k. """
-        if not self.root: return NIL
+        if self.is_empty: return NIL
 
         curr = self.root
         while curr:
@@ -115,12 +175,64 @@ class BinarySearchTree(TernaryNode):
         else:
             return NIL
 
-    def pop(self, k):
+    def refactor(self, node, to):
+        def remove_sub_tree(root):
+            p = root.parent
+
+            direction = None
+            if root == p.left:
+                direction = BinarySearchTree.LEFT
+                p.left = NIL
+            else:
+                direction = BinarySearchTree.RIGHT
+                p.right = NIL
+
+            root.parent = NIL
+            return p, direction
+
+        if not node: return
+
+        p, direction = remove_sub_tree(node)
+        if not to: return
+
+        remove_sub_tree(to)
+
+        to.parent = p
+
+        if direction == BinarySearchTree.LEFT:
+            p.left = to
+        elif direction == BinarySearchTree.RIGHT:
+            p.right = to
+
+    def remove(self, k):
         """ Remove a node contains key k from binary search tree, if success return it. """
         node = self.search(k)
-        if not node: return NIL
+        if not node:
+            raise KeyError() # Can't remove a key that not exist.
 
-        print(node.parent)
+        if not node.left:
+            self.refactor(node, node.right)
+        elif not node.right:
+            self.refactor(node, node.left)
+        else:
+            m = node.right.min
+            if m.right:
+                self.refactor(m, m.right)
+
+            m.pick()
+
+            if node.parent.left == node:
+                node.parent.left = m
+            if node.parent.right == node:
+                node.parent.right = m
+
+            m.parent = node.parent
+            m.left = node.left
+            m.right = node.right
+            if m.left: m.left.parent = m
+            if m.right: m.right.parent = m
+
+        self.size -= 1
 
     def __str__(self):
         return "<" + ", ".join([str(x) for x in self])+ ">"
@@ -129,13 +241,18 @@ class BinarySearchTree(TernaryNode):
         """ If binary search contain k. """
         pass
 
-    @staticmethod
-    def _iter_sub_tree(root):
-        if not root: return
+    def __len__(self):
+        return self.size
 
-        for x in BinarySearchTree._iter_sub_tree(root.left): yield x
-        yield root.key
-        for x in BinarySearchTree._iter_sub_tree(root.right): yield x
+    def __getitem__(self, item):
+        pass
 
     def __iter__(self):
-        for x in BinarySearchTree._iter_sub_tree(self.root): yield x
+        if self.is_empty: return
+
+        node = self.minimum
+
+        while node and node != self.nil:
+            yield node.key
+            node = node.next
+
