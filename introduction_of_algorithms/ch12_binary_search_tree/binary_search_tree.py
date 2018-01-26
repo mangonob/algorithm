@@ -37,7 +37,7 @@ class BinarySearchTreeNode(TreeNode):
 
     # def __del__(self):
     #     print("DEL " + str(self))
-    #
+
     def __str__(self):
         return "<%s: (%s (%s)  %s)>" % (self.parent and self.parent.key or "/ ", self.left and self.left.key or "/ ", self.key, self.right and self.right.key or "/ ")
 
@@ -102,13 +102,15 @@ class BinarySearchTree(TernaryNode):
     LEFT = 0
     RIGHT = 1
 
+    Node = BinarySearchTreeNode
+
     def __init__(self):
-        self.nil = BinarySearchTreeNode()
+        self.nil = self.__class__.Node()
         self._size = 0
 
     def insert(self, k):
         """ Insert a key into binary search tree. """
-        new_node = BinarySearchTreeNode(key=k)
+        new_node = self.__class__.Node(key=k)
 
         if self.is_empty:
             self.nil.left = new_node
