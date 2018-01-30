@@ -1,5 +1,5 @@
-from introduction_of_algorithms.ch11_hash_table.hash_function import *
-from introduction_of_algorithms.util.constant import *
+from ..ch11_hash_table.hash_function import *
+from ..util.constant import *
 
 import pprint
 
@@ -68,13 +68,3 @@ class OpenAddressingTable(object):
                 return True
         else:
             return False
-
-
-t = OpenAddressingTable(49999, hash_function_factor=create_double_probing)
-
-for i in range(0, 49999):
-    t.insert(i)
-
-print(t)
-
-l = list()

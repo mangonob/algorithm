@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-from introduction_of_algorithms.util import *
+from ..util import *
 from random import randint
-
 
 def create_mul_hash_function(capacity):
     def mul_hash(k):
@@ -39,13 +38,3 @@ def test_hash_function(hash_function, number_of_solt, defined_field):
     print()
     print("Hashed: of", hash_function.__name__, hashed)
     print("Count: of", hash_function.__name__, counts)
-
-
-def main():
-    test_hash_function(create_div_hash_function(100), 100, 10000)
-    test_hash_function(create_mul_hash_function(100), 100, 10000)
-    test_hash_function(create_universal_hash_function(capacity=100), 100, 10000)
-
-
-if __name__ == "__main__":
-    main()
