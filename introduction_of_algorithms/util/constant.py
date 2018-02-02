@@ -14,6 +14,9 @@ def shared_nil():
         def __bool__(self):
             return False
 
+        def __str__(self):
+            return "nil"
+
     if not hasattr(Nil, "shared"):
         Nil.shared = Nil()
 

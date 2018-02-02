@@ -39,7 +39,7 @@ class BinarySearchTreeNode(TreeNode):
     #     print("DEL " + str(self))
 
     def __str__(self):
-        return "<%s: (%s (%s)  %s)>" % (self.parent and self.parent.key or "/ ", self.left and self.left.key or "/ ", self.key, self.right and self.right.key or "/ ")
+        return "(%s, %s->%s, %s)" % (self.left.key, self.parent.key or "", self.key, self.right.key)
 
     @property
     def min(self):
@@ -237,7 +237,7 @@ class BinarySearchTree(TernaryNode):
         self.size -= 1
 
     def __str__(self):
-        return "<" + ", ".join([str(x) for x in self])+ ">"
+        return "{" + ", ".join([str(x) for x in self])+ "}"
 
     def __contains__(self, k):
         """ If binary search contain k. """
@@ -255,6 +255,6 @@ class BinarySearchTree(TernaryNode):
         node = self.minimum
 
         while node and node != self.nil:
-            yield node.key
+            yield node
             node = node.next
 
