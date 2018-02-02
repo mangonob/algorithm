@@ -1,5 +1,5 @@
-from introduction_of_algorithms.ch10_base_datastruct import BinaryNode
-from introduction_of_algorithms.util.constant import *
+from ..ch10_base_datastruct import BinaryNode
+from ..util.constant import *
 
 import weakref
 
