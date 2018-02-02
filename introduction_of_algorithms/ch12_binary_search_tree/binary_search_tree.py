@@ -99,8 +99,8 @@ class BinarySearchTreeNode(TreeNode):
 
 
 class BinarySearchTree(TernaryNode):
-    LEFT = 0
-    RIGHT = 1
+    LEFT = 1
+    RIGHT = 2
 
     Node = BinarySearchTreeNode
 

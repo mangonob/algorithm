@@ -3,12 +3,12 @@ from .binary_search_tree import BinarySearchTreeNode, BinarySearchTree
 
 class RedBlackTreeNode(BinarySearchTreeNode):
     """ Node of red-black tree. """
-    BLACK = 0
-    RED = 1
+    BLACK = 1
+    RED = 2
 
-    def __init__(self, color=BLACK, *args, **kwargs):
+    def __init__(self, color=RED, *args, **kwargs):
         super(BinarySearchTreeNode, self).__init__(*args, **kwargs)
-        self.color = RedBlackTreeNode.BLACK
+        self.color = color
 
     def left_rotate(self):
         if self.parent:
@@ -43,6 +43,17 @@ class RedBlackTreeNode(BinarySearchTreeNode):
 
         left.right = self
         self.parent = left
+
+    @property
+    def is_red(self):
+        return self.color == RedBlackTreeNode.RED
+
+    @property
+    def is_black(self):
+        return self.color == RedBlackTreeNode.BLACK
+
+    def __str__(self):
+        return "(%s, %s%s>%s, %s)" % (self.left.key, self.parent.key or "", "=" if self.is_red else "-", self.key, self.right.key)
 
 
 class RedBlackTree(BinarySearchTree):
